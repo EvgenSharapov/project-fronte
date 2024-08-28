@@ -1,0 +1,41 @@
+th{
+    border: 3px solid coral;
+    text-align: center;
+    color: #1f81d6;
+}
+td{
+    border: 1px solid coral;
+    text-align: center;
+    color: #1f81d6;
+}
+
+
+table{
+    border-radius: 6%;
+margin: auto;
+    border: 6px solid #403633;
+}
+
+div{
+    text-align: center;
+    color: aliceblue;
+}
+
+h1{
+    padding-top: 180px;
+}
+body{
+    background-color: #65b515;
+    font-family: "Open Sans",sans-serif;
+}
+button:hover:before{
+    inset: -3px;
+}
+button:hover:after{
+    inset: -3px;
+}
+
+
+
+
+

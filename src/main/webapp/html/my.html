@@ -4,8 +4,117 @@
     <script src=https://code.jquery.com/jquery-3.6.0.min.js></script>
     <link href="/css/my.css" rel="stylesheet">
 </head>
-<body>
+<body onload="parameters(0)">
+<div>
 <h1>RPG admin panel</h1>
+<label for="select_1">count per page:</label>
+<select id="select_1" onchange="parameters(0)">
+    <option value="3">3</option>
+    <option value="6">6</option>
+    <option value="12">12</option>
+    <option value="20">20</option>
+</select>
+</div>
+<div>
+<h2>Account list:</h2>
+</div>
+<table id="table"style="padding: 10px">
+<tr>
+    <th>#</th>
+    <th>Name</th>
+    <th>Title</th>
+    <th>Race</th>
+    <th>Profession</th>
+    <th>Birthday</th>
+    <th>Banned</th>
+    <th>Level</th>
+    <th>Edit</th>
+    <th>Delete</th>
+</tr>
+</table>
+<div id="pages">Pages:</div>
 
+
+<script>
+    function parameters(page_number){
+        $("tr:has(td)").remove();
+        let url="/rest/players?";
+        let countInPage=$("#select_1").val();
+        if(countInPage==undefined){
+            countInPage=3;
+        }
+        url=url.concat("pageSize=").concat(countInPage);
+        if(page_number==null){
+            page_number=0;
+        }
+        url= url.concat("&pageNumber=").concat(page_number);
+
+
+
+
+        $.get(url, function (response){
+            $.each(response,function (i,content){
+                $('<tr>').html("<td>"
+                    +content.id+"</td><td>"
+                    +content.name+"</td><td>"
+                    +content.title+"</td><td>"
+                    +content.race+"</td><td>"
+                    +content.profession+"</td><td>"
+                    +new Date(content.birthday).toLocaleString()+"</td><td>"
+                    +content.banned+"</td><td>"
+                    +content.level+"</td><td>"
+                    +"<button id='button_edit_" +content.id+ "'''>"
+                        +"<img src='/img/edit.png'>"
+                            +"</button>"+"</td><td>"
+                     +"<button id='button_delete_" +content.id+ "''>"
+                        +"<img src='/img/delete.png'>"
+                            +"</button>"+"</td>"
+
+
+
+                ).appendTo("#table");
+            });
+            }
+        );
+        let totalPag=pagination();
+
+        let pagesCount=Math.ceil(totalPag/countInPage);
+        $("button.pgn_button").remove();
+        for(let i=0;i<pagesCount;i++){
+            let button_tag="<button>" + (i+1) + "</button>";
+            let but=$(button_tag)
+                .attr('id',"button_"+i)
+                .attr('onclick',"parameters("+i+")")
+                .addClass('pgn_button')
+            $('#pages').append(but);
+        }
+        let selected='#button_'+page_number;
+        $(selected).css('color',"red")
+
+    }
+
+function pagination(){
+        let url="/rest/players/count";
+        let def=0;
+        $.ajax({
+            url:url,
+            async:false,
+            success:function (result){
+                def=parseInt(result);
+            }
+
+        })
+
+
+
+
+
+        return def;
+}
+
+
+
+</script>
 </body>
+
 </html>
